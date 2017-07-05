@@ -2,49 +2,45 @@
 
 [ext_resource path="res://entities/player/player.gd" type="Script" id=1]
 [ext_resource path="res://entities/player/player.tex" type="Texture" id=2]
-[ext_resource path="res://entities/player/player_radar.gd" type="Script" id=3]
-[ext_resource path="res://entities/bullet/bullet.wav" type="Sample" id=4]
-[ext_resource path="res://entities/player/explosion.wav" type="Sample" id=5]
-[ext_resource path="res://entities/player/player_ui.gd" type="Script" id=6]
-[ext_resource path="res://game_over.ttf" type="DynamicFontData" id=7]
-[ext_resource path="res://entities/player/Spawn.tscn" type="PackedScene" id=8]
+[ext_resource path="res://entities/player/Trail.tscn" type="PackedScene" id=3]
+[ext_resource path="res://entities/player/player_radar.gd" type="Script" id=4]
+[ext_resource path="res://entities/bullet/bullet.wav" type="Sample" id=5]
+[ext_resource path="res://entities/player/explosion.wav" type="Sample" id=6]
+[ext_resource path="res://entities/player/player_ui.gd" type="Script" id=7]
+[ext_resource path="res://game_over.ttf" type="DynamicFontData" id=8]
+[ext_resource path="res://entities/player/Spawn.tscn" type="PackedScene" id=9]
 
 [sub_resource type="CircleShape2D" id=1]
 
 custom_solver_bias = 0.0
 radius = 32.0
 
-[sub_resource type="ColorRamp" id=2]
-
-offsets = FloatArray( 0.753623, 1 )
-colors = ColorArray( 0.589844, 0.836578, 1, 1, 0.902344, 0.56749, 0.56749, 0 )
-
-[sub_resource type="CircleShape2D" id=3]
+[sub_resource type="CircleShape2D" id=2]
 
 custom_solver_bias = 0.0
 radius = 20.0
 
-[sub_resource type="SampleLibrary" id=4]
+[sub_resource type="SampleLibrary" id=3]
 
 samples/bullet = {
 "db": -5.0,
 "pitch": 1.0,
 "priority": 0,
-"sample": ExtResource( 4 )
+"sample": ExtResource( 5 )
 }
 samples/explosion = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
-"sample": ExtResource( 5 )
+"sample": ExtResource( 6 )
 }
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=4]
 
 font/size = 100
 font/use_mipmaps = false
 font/use_filter = false
-font/font = ExtResource( 7 )
+font/font = ExtResource( 8 )
 
 [node name="Player" type="KinematicBody2D" groups=[
 "player",
@@ -72,34 +68,7 @@ transform/pos = Vector2( 0, 5 )
 z/z = 2
 texture = ExtResource( 2 )
 
-[node name="Particles2D" type="Particles2D" parent="Sprite"]
-
-transform/pos = Vector2( 0, -15 )
-transform/rot = -180.0
-z/relative = false
-config/amount = 70
-config/lifetime = 1.0
-config/emitting = false
-config/process_mode = 1
-config/local_space = false
-params/direction = 0.0
-params/spread = 40.0
-params/linear_velocity = 40.0
-params/spin_velocity = 10.0
-params/orbit_velocity = 0.0
-params/gravity_direction = 0.0
-params/gravity_strength = 9.8
-params/radial_accel = 0.0
-params/tangential_accel = 0.0
-params/damping = 0.0
-params/initial_angle = 0.0
-params/initial_size = 10.0
-params/final_size = 4.0
-params/hue_variation = 0.0
-params/anim_speed_scale = 1.0
-params/anim_initial_pos = 0.0
-color/color = Color( 0.65625, 0.967773, 1, 1 )
-color/color_ramp = SubResource( 2 )
+[node name="Particles2D" parent="Sprite" instance=ExtResource( 3 )]
 
 [node name="Bullets" type="Node" parent="."]
 
@@ -113,7 +82,7 @@ autostart = false
 [node name="Hurtbox" type="Area2D" parent="."]
 
 input/pickable = true
-shapes/0/shape = SubResource( 3 )
+shapes/0/shape = SubResource( 2 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
 gravity_vec = Vector2( 0, 1 )
@@ -125,13 +94,13 @@ collision/mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
 
-shape = SubResource( 3 )
+shape = SubResource( 2 )
 trigger = false
 _update_shape_index = 0
 
 [node name="Radar" type="Node2D" parent="."]
 
-script/script = ExtResource( 3 )
+script/script = ExtResource( 4 )
 
 [node name="SamplePlayer2D" type="SamplePlayer2D" parent="."]
 
@@ -141,12 +110,12 @@ params/attenuation/min_distance = 1.0
 params/attenuation/max_distance = 2048.0
 params/attenuation/distance_exp = 1.0
 config/polyphony = 3
-config/samples = SubResource( 4 )
+config/samples = SubResource( 3 )
 config/pitch_random = 0.1
 
 [node name="PlayerUI" type="Node2D" parent="."]
 
-script/script = ExtResource( 6 )
+script/script = ExtResource( 7 )
 
 [node name="Score" type="Label" parent="PlayerUI"]
 
@@ -158,14 +127,14 @@ margin/left = -311.0
 margin/top = -142.0
 margin/right = -120.0
 margin/bottom = -85.0
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 4 )
 text = "0"
 align = 2
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="Spawn" parent="." instance=ExtResource( 8 )]
+[node name="Spawn" parent="." instance=ExtResource( 9 )]
 
 [connection signal="body_enter" from="Hurtbox" to="." method="_on_Area2D_body_enter"]
 

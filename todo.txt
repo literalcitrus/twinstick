@@ -1,16 +1,7 @@
 Twinstick Shooter TODO:
 
-Fighter:
-- Move
-- Shoot
-- Die
-- Brain
-
-
 "get into that later":
-- enemy ship
-- high score table
-- player lerp movement
-- powerups
-- larger asteroids that split
-- lives
+- lerp right stick
+- weird latent "downwardsness"
+
+Problems:

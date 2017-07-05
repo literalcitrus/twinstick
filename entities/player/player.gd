@@ -1,16 +1,20 @@
 extends KinematicBody2D
 
-const movement_speed = 400
+const max_movement_speed = 400
 const rate_of_fire = 6
+const accel_amount = 900
+const turn_rate = 10
+const bullet_speed = 2000
+
+signal died()
 
 var left_stick_input = Vector2()
 var right_stick_input = Vector2()
 var facing_dir = Vector2(1, 0)
-var movement_dir = Vector2(0, 0)
-
-var lerp_speed = 0.1
-
+var velocity = Vector2()
+var accel = Vector2()
 var score = 0
+var health_points = 1
 
 onready var timer_node = get_node("RateOfFireTimer")
 onready var radar_node = get_node("Radar")
@@ -33,14 +37,22 @@ func _ready():
 func _fixed_process(delta):
 	left_stick_input = get_node("/root/input_manager").left_stick_input
 	if (right_stick_input != Vector2()):
-		facing_dir = right_stick_input.normalized()
+		facing_dir = turn_towards(facing_dir, right_stick_input.normalized(), delta)
 	else:
 		if (left_stick_input != Vector2()):
-			facing_dir = left_stick_input.normalized()
+			facing_dir = velocity.normalized()
 	
-	movement_dir = left_stick_input
+	if (left_stick_input == Vector2()):
+		accel = -velocity.normalized() * accel_amount * delta
+	else:
+		accel = left_stick_input * accel_amount * delta
+	velocity += accel
 	
-	var motion = movement_dir.normalized() * movement_speed * delta
+	# clamp velocity
+	if (velocity.length() > max_movement_speed):
+		velocity = velocity.normalized() * max_movement_speed
+	
+	var motion = velocity * delta
 	motion = move(motion)
 	
 	if (is_colliding()):
@@ -59,10 +71,18 @@ func _process(delta):
 	radar_node.set_global_rot(0)
 	ui_node.set_global_rot(0)
 	
-	if (movement_dir == Vector2()):
+	if (velocity == Vector2()):
 		particles_node.set_emitting(false)
 	else:
 		particles_node.set_emitting(true)
+
+func turn_towards(current, destination, delta):
+	if (destination == Vector2()):
+		return current
+	if (abs(rad2deg(current.angle_to(destination))) < turn_rate * delta):
+		return destination
+	else :
+		return current.rotated(sign(current.angle_to(destination)) * deg2rad(turn_rate * delta)).normalized()
 
 func fire_bullet():
 	if (timer_node.get_time_left() == 0):
@@ -70,11 +90,18 @@ func fire_bullet():
 		var new_bullet = bullet_scene.instance()
 		new_bullet.direction = facing_dir
 		new_bullet.set_pos(get_pos())
+		new_bullet.target_group = "enemy"
+		new_bullet.movement_speed = bullet_speed
 		get_node("Bullets").add_child(new_bullet)
 		# start timer
 		timer_node.start()
 		# audio
 		sound_node.play("bullet")
+
+func take_damage(damage):
+	health_points -= damage
+	if (health_points <= 0):
+		die()
 
 func die():
 	get_node("/root/camera").track_node = null
@@ -93,10 +120,12 @@ func die():
 	add_child(new_explode)
 	new_explode.set_hidden(false)
 	new_explode.set_emitting(true)
+	
+	emit_signal("died")
 
 func _on_Area2D_body_enter( body ):
 	if (body.is_in_group("enemy")):
-		die()
+		take_damage(1)
 
 func game_over():
 	var new_game_over = game_over_scene.instance()

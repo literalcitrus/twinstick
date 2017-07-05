@@ -1,0 +1,77 @@
+[gd_scene load_steps=4 format=1]
+
+[ext_resource path="res://shaders/overlay.png" type="Texture" id=1]
+
+[sub_resource type="CanvasItemShader" id=1]
+
+_code = {
+"fragment": "uniform float r_offset_x = -0.002;
+uniform float r_offset_y = -0.003;
+uniform float g_offset_x = 0;
+uniform float g_offset_y = 0;
+uniform float b_offset_x = 0.002;
+uniform float b_offset_y = 0.003;
+
+vec2 ps = TEXTURE_PIXEL_SIZE;
+vec3 r_val;
+vec3 g_val;
+vec3 b_val;
+
+//Offset color channel
+r_val = texscreen(SCREEN_UV+vec2(0+r_offset_x,0+r_offset_y)*ps); 
+g_val = texscreen(SCREEN_UV+vec2(0+g_offset_x,0+g_offset_y)*ps); 
+b_val = texscreen(SCREEN_UV+vec2(0+b_offset_x,0+b_offset_y)*ps); 
+
+//combine color
+vec3 gl_chromatic = vec3(r_val.r, g_val.g, b_val.b);
+
+//set to screen texture
+COLOR.rgb = gl_chromatic;",
+"fragment_ofs": 0,
+"light": "",
+"light_ofs": 0,
+"vertex": "",
+"vertex_ofs": 0
+}
+
+[sub_resource type="CanvasItemMaterial" id=2]
+
+shader/shader = SubResource( 1 )
+shader/shading_mode = 0
+shader_param/r_offset_x = -0.002
+shader_param/r_offset_y = -0.003
+shader_param/g_offset_x = 0.0
+shader_param/g_offset_y = 0.0
+shader_param/b_offset_x = 0.002
+shader_param/b_offset_y = 0.003
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="."]
+
+z/z = 100
+copy_mode = 0
+rect = Rect2( -100, -100, 200, 200 )
+
+[node name="Chromatic" type="TextureFrame" parent="BackBufferCopy"]
+
+material/material = SubResource( 2 )
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = -1240.0
+margin/bottom = -1240.0
+texture = ExtResource( 1 )
+stretch_mode = 2
+
+
