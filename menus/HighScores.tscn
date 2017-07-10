@@ -2,6 +2,7 @@
 
 [ext_resource path="res://menus/highscores.gd" type="Script" id=1]
 [ext_resource path="res://game_over.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://menus/name_input.gd" type="Script" id=3]
 
 [sub_resource type="DynamicFont" id=1]
 
@@ -31,44 +32,6 @@ font/use_mipmaps = false
 font/use_filter = false
 font/font = ExtResource( 2 )
 
-[sub_resource type="GDScript" id=5]
-
-script/source = "extends Label
-
-const num_chars = 3
-
-var name
-var current_char = 0
-
-func _ready():
-	set_process_input(true)
-	name = get_text()
-
-func _input(event):
-	if (event.is_action_pressed(\"ui_up\") || get_node(\"/root/input_manager\").left_stick_input.y == -1):
-		name = increment_char(name, current_char, 1)
-	elif (event.is_action_pressed(\"ui_down\") || get_node(\"/root/input_manager\").left_stick_input.y == 1):
-		name = increment_char(name, current_char, -1)
-	
-	if ((event.is_action_pressed(\"ui_accept\") || event.is_action_pressed(\"continue\")) && !event.is_echo()):
-		current_char += 1
-		if (current_char >= num_chars):
-			current_char = 0
-		else:
-			name += \"A\"
-	
-	if (name[current_char] > \"Z\"):
-		name[current_char] = \"A\"
-	elif (name[current_char] < \"A\"):
-		name[current_char] = \"Z\"
-	
-	set_text(name)
-
-func increment_char(full_string, index, increment):
-	# turn back now
-	full_string[index] = RawArray([full_string[index].to_ascii()[0] + increment]).get_string_from_ascii()
-	return full_string"
-
 [node name="HighScores" type="CanvasLayer"]
 
 layer = 1
@@ -88,7 +51,7 @@ margin/top = 0.0
 margin/right = 40.0
 margin/bottom = 40.0
 
-[node name="Label" type="Label" parent="Control"]
+[node name="ScoreTable" type="Label" parent="Control"]
 
 focus/ignore_mouse = true
 focus/stop_mouse = true
@@ -104,7 +67,7 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Control/Label"]
+[node name="RichTextLabel" type="RichTextLabel" parent="Control/ScoreTable"]
 
 focus/ignore_mouse = false
 focus/stop_mouse = true
@@ -120,8 +83,9 @@ bbcode/enabled = false
 bbcode/bbcode = ""
 visible_characters = -1
 
-[node name="Label 2" type="Label" parent="Control"]
+[node name="HighscoreNameInput" type="Label" parent="Control"]
 
+visibility/visible = false
 focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -135,8 +99,9 @@ text = "NEW HIGH SCORE!!!"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
+script/script = ExtResource( 3 )
 
-[node name="Name" type="Label" parent="Control/Label 2"]
+[node name="Name" type="Label" parent="Control/HighscoreNameInput"]
 
 focus/ignore_mouse = true
 focus/stop_mouse = true
@@ -151,6 +116,21 @@ text = "A"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-script/script = SubResource( 5 )
+
+[node name="Name1" type="Label" parent="Control/HighscoreNameInput"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 179.0
+margin/top = 96.0
+margin/right = 389.0
+margin/bottom = 198.0
+custom_fonts/font = SubResource( 4 )
+text = "A"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
 
 

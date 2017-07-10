@@ -3,8 +3,11 @@ extends CanvasLayer
 const default_scores = {}
 
 var current_scores = {}
-onready var score_table = get_node("Control/Label")
-onready var scores_text = get_node("Control/Label/RichTextLabel")
+onready var score_table = get_node("Control/ScoreTable")
+onready var scores_text = get_node("Control/ScoreTable/RichTextLabel")
+onready var name_input = get_node("Control/HighscoreNameInput")
+
+var temp_score
 
 func _ready():
 	for i in range(0, 10):
@@ -23,12 +26,15 @@ func _ready():
 	file.close()
 	current_scores.parse_json(content)
 	
+	name_input.connect("name_entered", self, "name_received")
+
+func display_scores():
 	for i in range(0, 10):
 		scores_text.add_text(str(i+1) + ": " + current_scores[str(i)]["name"] + " - " + str(current_scores[str(i)]["score"]) + "\n")
 
 func check_score(score):
 	for i in range(0, 10):
-		if (score >= current_scores[i]["score"]):
+		if (score >= current_scores[str(i)]["score"]):
 			return i
 	
 	return -1
@@ -36,7 +42,20 @@ func check_score(score):
 func insert_score(score, rank, name):
 	var temp_score = {"name":name, "score":score}
 	for i in range(rank, 9):
-		temp_score = current_scores[i+1]
-		current_scores[i] = temp_score
+		temp_score = current_scores[str(i+1)]
+		current_scores[str(i)] = temp_score
 
+func get_highscore_name(score):
+	score_table.set_hidden(true)
+	name_input.set_hidden(false)
+	name_input.set_process_input(true)
+	temp_score = score
 
+func final_score(score):
+	var rank = check_score(score)
+	if (rank != -1):
+		get_highscore_name(score)
+
+func name_received(name):
+	insert_score(temp_score, check_score(temp_score), name)
+	display_scores()
