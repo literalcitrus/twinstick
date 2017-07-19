@@ -1,7 +1,6 @@
 Twinstick Shooter TODO:
 
-"get into that later":
-- lerp right stick
-- weird latent "downwardsness"
+Refactoring Problems:
+Everything needs to just be a thing on its own
 
-Problems:
+- Move enemy entities to correct folder

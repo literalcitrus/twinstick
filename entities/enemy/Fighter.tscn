@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=1]
+[gd_scene load_steps=13 format=1]
 
 [ext_resource path="res://entities/enemy/fighter.gd" type="Script" id=1]
 [ext_resource path="res://entities/enemy/fighter.tex" type="Texture" id=2]
@@ -7,13 +7,15 @@
 [ext_resource path="res://entities/enemy/explosion.wav" type="Sample" id=5]
 [ext_resource path="res://entities/player/Spawn.tscn" type="PackedScene" id=6]
 [ext_resource path="res://entities/player/Explode.tscn" type="PackedScene" id=7]
+[ext_resource path="res://components/Gun/Gun.tscn" type="PackedScene" id=8]
+[ext_resource path="res://components/ShipMovement/ShipMovement.tscn" type="PackedScene" id=9]
 
 [sub_resource type="CircleShape2D" id=1]
 
 custom_solver_bias = 0.0
 radius = 32.0
 
-[sub_resource type="ColorRamp" id=2]
+[sub_resource type="ColorRamp" id=4]
 
 offsets = FloatArray( 0.753623, 1 )
 colors = ColorArray( 0.976563, 0.534058, 0.534058, 1, 0.902344, 0.56749, 0.56749, 0 )
@@ -62,7 +64,7 @@ texture = ExtResource( 2 )
 transform/pos = Vector2( 1.31134e-06, -30 )
 config/emitting = true
 color/color = Color( 0.976471, 0.533333, 0.533333, 1 )
-color/color_ramp = SubResource( 2 )
+color/color_ramp = SubResource( 4 )
 
 [node name="SamplePlayer2D" type="SamplePlayer2D" parent="."]
 
@@ -79,13 +81,25 @@ config/pitch_random = 0.0
 
 [node name="Explode" parent="." instance=ExtResource( 7 )]
 
-[node name="Bullets" type="Node" parent="."]
+[node name="Gun" parent="." instance=ExtResource( 8 )]
 
-[node name="RateOfFireTimer" type="Timer" parent="."]
+bullet_scene_path = "res://entities/bullet/Bullet.tscn"
+target_group = "player"
+bullet_speed = 800
+rof = 2
+
+[node name="GunInactiveTimer" type="Timer" parent="."]
 
 process_mode = 1
 wait_time = 1.0
 one_shot = true
 autostart = true
+
+[node name="ShipMovement" parent="." instance=ExtResource( 9 )]
+
+max_movement_speed = 600
+accel_amount = 1000
+
+[connection signal="timeout" from="GunInactiveTimer" to="." method="_on_GunInactiveTimer_timeout"]
 
 
