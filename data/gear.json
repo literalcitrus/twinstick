@@ -1,0 +1,19 @@
+{
+  "gear": [
+    {
+      "id": 0,
+      "name": "Metal Plate",
+      "type": "armour"
+    },
+    {
+      "id": 1,
+      "name": "Gun",
+      "type": "weapon"
+    },
+    {
+      "id": 2,
+      "name": "Booster",
+      "type": "movement"
+    }
+  ]
+}

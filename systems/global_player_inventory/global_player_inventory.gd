@@ -2,4 +2,4 @@
 
 extends Node
 
-var inventory_contents = []
+var inventory_contents = [] # list of items contained in the player inventory

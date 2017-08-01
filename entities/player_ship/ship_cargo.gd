@@ -2,4 +2,4 @@
 
 extends Node
 
-var cargo_contents = []
+var cargo_contents = [] # list of items contained in the ship cargo
