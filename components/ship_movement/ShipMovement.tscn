@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=1]
 
-[ext_resource path="res://components/ShipMovement/ship_movement.gd" type="Script" id=1]
+[ext_resource path="res://components/ship_movement/ship_movement.gd" type="Script" id=1]
 
 [node name="ShipMovement" type="Node2D"]
 
