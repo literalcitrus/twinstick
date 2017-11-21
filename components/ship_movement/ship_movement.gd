@@ -1,7 +1,7 @@
 extends Node2D
 
-export(int) var max_movement_speed
-export(int) var accel_amount
+export(int) var max_movement_speed = 100
+export(int) var accel_amount = 100
 
 var velocity = Vector2()
 var accel = Vector2()
