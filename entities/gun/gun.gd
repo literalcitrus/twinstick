@@ -2,10 +2,10 @@
 
 extends Node2D
 
-export(String, FILE, "*.tscn") var bullet_scene_path
+export(String, FILE, "*.tscn") var bullet_scene_path = "res://entities/bullet/Bullet.tscn"
 export(String) var target_group
-export(int) var bullet_speed
-export(int) var rof
+export(int) var bullet_speed = 1000
+export(int) var rof = 3
 
 var bullet_scene
 
@@ -30,14 +30,13 @@ func _fixed_process(delta):
 	
 
 func fire_bullet():
-	print("Bullet fired")
 	# bullet creation
-#	var new_bullet = bullet_scene.instance()
-#	new_bullet.direction = facing_dir
-#	new_bullet.set_pos(get_global_pos())
-#	new_bullet.target_group = target_group
-#	new_bullet.movement_speed = bullet_speed
-#	bullet_container.add_child(new_bullet)
+	var new_bullet = bullet_scene.instance()
+	new_bullet.direction = facing_dir
+	new_bullet.set_pos(get_global_pos())
+	new_bullet.target_group = target_group
+	new_bullet.movement_speed = bullet_speed
+	bullet_container.add_child(new_bullet)
 
 func _on_RateOfFire_timeout():
 	refire_available = true

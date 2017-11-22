@@ -1,11 +1,11 @@
 [gd_scene load_steps=2 format=1]
 
-[ext_resource path="res://components/ship_movement/ship_movement.gd" type="Script" id=1]
+[ext_resource path="res://entities/ship_movement/ship_movement.gd" type="Script" id=1]
 
 [node name="ShipMovement" type="Node2D"]
 
 script/script = ExtResource( 1 )
-max_movement_speed = null
-accel_amount = null
+max_movement_speed = 100
+accel_amount = 100
 
 

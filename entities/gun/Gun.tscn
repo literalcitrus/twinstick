@@ -1,14 +1,14 @@
 [gd_scene load_steps=2 format=1]
 
-[ext_resource path="res://components/gun/gun.gd" type="Script" id=1]
+[ext_resource path="res://entities/gun/gun.gd" type="Script" id=1]
 
 [node name="Gun" type="Node2D"]
 
 script/script = ExtResource( 1 )
-bullet_scene_path = null
+bullet_scene_path = "res://entities/bullet/Bullet.tscn"
 target_group = null
-bullet_speed = null
-rof = null
+bullet_speed = 1000
+rof = 3
 
 [node name="Bullets" type="Node" parent="."]
 

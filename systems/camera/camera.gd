@@ -4,7 +4,7 @@ var track_node = null
 
 func _ready():
 	make_current()
-	set_zoom(Vector2(2, 2))
+	set_zoom(Vector2(10, 10))
 	set_process(true)
 
 
